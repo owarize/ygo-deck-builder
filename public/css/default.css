@@ -1,0 +1,41 @@
+* {
+    margin:  0;
+    padding: 0;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    background-color: rgb(32,32,32);
+}
+
+div.layout {
+    display:        flex;
+    flex-direction: column;
+    min-height:     100vh;
+}
+
+div.header {
+    background-color: rgb(48,48,48);
+}
+
+div.main {
+    flex:    1;
+    display: flex;
+}
+
+div.content {
+    flex-grow: 1;
+    margin:    5px;
+
+    border: 1px rgb(64,64,64) solid;
+}
+
+p {
+    padding: 3px;
+
+    font:  8pt Sans, Verdana;
+    color: rgb(224,224,224);
+}

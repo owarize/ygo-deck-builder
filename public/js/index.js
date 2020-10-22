@@ -7,6 +7,13 @@ $(document).ready(() => {
     });
 
     socket.on('dbSearchResults', (results) => {
-        console.log(results);
+        for (let i = 0; i < results.length; i++) {
+            let html = '<div class="card">';
+            //html    += '<p class="card-name">' + results[i].name + '</p>';
+            html    += '<img src="' + results[i].card_images[0].image_url + '">'
+            html    += '</div>'
+
+            $('#card-db-listing').append(html);
+        }
     });
 });

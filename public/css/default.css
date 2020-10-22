@@ -27,14 +27,32 @@ div.main {
 }
 
 div.content {
-    flex-grow: 1;
-    margin:    5px;
+    flex-grow:  1;
+    flex-basis: 0;
+    margin:     5px;
 
     border: 1px rgb(64,64,64) solid;
 }
 
 p {
     padding: 3px;
+
+    font:  8pt Sans, Verdana;
+    color: rgb(224,224,224);
+}
+
+p.header {
+    text-align:  center;
+    background:  linear-gradient(rgb(32,32,32), rgb(64,64,64));
+    font-weight: bold;
+}
+
+input {
+    margin:  5px;
+    padding: 2px;
+
+    background-color: black;
+    border: 1px rgb(64,64,64) solid;
 
     font:  8pt Sans, Verdana;
     color: rgb(224,224,224);

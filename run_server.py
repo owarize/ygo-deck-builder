@@ -6,13 +6,14 @@ import eventlet
 import socketio
 
 card_db_file = 'card_db.json'
-card_db      = {}
+card_db      = []
 
 
 # ---------------------------------------------------------------------------------------------------- SERVER INIT
 static_files = {
     '/':                'pages/index.html',
-    '/css/default.css': 'public/css/default.css'
+    '/css/default.css': 'public/css/default.css',
+    '/js/index.js':     'public/js/index.js'
 }
 
 sio = socketio.Server()
@@ -23,8 +24,23 @@ if 'PORT' in os.environ.keys():
     port = int(os.environ['PORT'])
 
 
+# ---------------------------------------------------------------------------------------------------- SOCKET.IO
+@sio.on('dbSearch')
+def dbSearch(sid, query):
+    query   = query.lower()
+    results = []
+
+    for card in card_db:
+        if query in card['name'].lower():
+            results.append(card)
+
+    sio.emit('dbSearchResults', results, room=sid)
+
+
 # ---------------------------------------------------------------------------------------------------- FUNCTIONS
 def loadCardDB():
+    global card_db
+
     if os.path.isfile(card_db_file):
         print('Card DB file exists.')
         card_db = json.load(open(card_db_file))

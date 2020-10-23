@@ -3,10 +3,6 @@
     padding: 0;
 }
 
-html, body {
-    height: 100%;
-}
-
 body {
     background-color: rgb(22,32,42);
 }
@@ -14,7 +10,9 @@ body {
 div.layout {
     display:        flex;
     flex-direction: column;
-    min-height:     100vh;
+
+    height:   100vh;
+    overflow: hidden;
 }
 
 div.header {
@@ -22,15 +20,17 @@ div.header {
 }
 
 div.main {
-    flex:    1;
-    display: flex;
+    flex-grow: 1;
+    display:   flex;
+    overflow:  hidden;
 }
 
 div.content {
     flex-grow:  1;
     flex-basis: 0;
-    margin:     5px;
+    overflow-y: auto;
 
+    margin: 5px;
     border: 1px rgb(54,64,74) solid;
 }
 

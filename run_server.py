@@ -5,8 +5,9 @@ import urllib.request
 import eventlet
 import socketio
 
-card_db_file = 'card_db.json'
-card_db      = []
+card_db_file  = 'card_db.json'
+card_db       = []
+card_db_by_id = {}
 
 
 # ---------------------------------------------------------------------------------------------------- SERVER INIT
@@ -37,9 +38,20 @@ def dbSearch(sid, query):
     sio.emit('dbSearchResults', results, room=sid)
 
 
+@sio.on('collectionUpdated')
+def collectionUpdated(sid, collection):
+    results = []
+
+    for card_id in collection:
+        results.append(card_db_by_id[int(card_id)])
+
+    sio.emit('collectionUpdateResults', results, room=sid)
+
+
 # ---------------------------------------------------------------------------------------------------- FUNCTIONS
 def loadCardDB():
     global card_db
+    global card_db_by_id
 
     if os.path.isfile(card_db_file):
         print('Card DB file exists.')
@@ -53,6 +65,12 @@ def loadCardDB():
         json.dump(card_db, open(card_db_file, 'w'))
 
     print(f'Loaded {len(card_db)} cards.')
+    print('Building database...', end=' ')
+
+    for card in card_db:
+        card_db_by_id[card['id']] = card
+
+    print('Done.')
 
 
 def main():

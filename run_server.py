@@ -28,14 +28,19 @@ if 'PORT' in os.environ.keys():
 # ---------------------------------------------------------------------------------------------------- SOCKET.IO
 @sio.on('dbSearch')
 def dbSearch(sid, query):
-    query   = query.lower()
-    results = []
+    query     = query.lower()
+    results   = []
+    n_results = 0
 
     for card in card_db:
         if query in card['name'].lower():
-            results.append(card)
+            n_results += 1
+            if len(results) < 25:
+                results.append(card)
 
-    sio.emit('dbSearchResults', results, room=sid)
+    sio.emit('dbSearchResults', {
+        'results':   results,
+        'n_results': n_results }, room=sid)
 
 
 @sio.on('collectionUpdated')

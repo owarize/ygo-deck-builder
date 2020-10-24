@@ -1,8 +1,10 @@
+import io
 import json
 import os
 import urllib.request
 
 import eventlet
+import pandas
 import socketio
 
 card_db_file  = 'card_db.json'
@@ -61,6 +63,18 @@ def deckUpdated(sid, deck):
         results.append(card_db_by_id[int(card_id)])
 
     sio.emit('deckUpdateResults', results, room=sid)
+
+
+@sio.on('csvFile')
+def csvFile(sid, csv_str):
+    csv_io  = io.StringIO(csv_str)
+    csv     = pandas.read_csv(csv_io)
+    results = []
+
+    for card_id in csv['cardid']:
+        results.append(card_db_by_id[int(card_id)])
+
+    sio.emit('csvSubmitResults', results, room=sid)
 
 
 # ---------------------------------------------------------------------------------------------------- FUNCTIONS

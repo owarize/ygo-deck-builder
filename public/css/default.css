@@ -84,3 +84,9 @@ input {
     font:  8pt Sans, Verdana;
     color: rgb(224,224,224);
 }
+
+input[type="file"]::file-selector-button {
+    background-color: black;
+    border: none;
+    color:  cyan;
+}

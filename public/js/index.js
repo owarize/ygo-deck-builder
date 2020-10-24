@@ -32,7 +32,7 @@ $(document).ready(() => {
     socket.on('collectionUpdateResults', (results) => {
         $('#user-collection-listing').empty();
 
-        for (let i = 0; i < results.length; i++) {
+        for (let i = results.length-1; i >= 0; i--) {
             let html = '<div class="card">';
             //html    += '<p class="card-name">' + results[i].name + '</p>';
             html    += '<img id="' + results[i].id + '" src="' + results[i].card_images[0].image_url + '">'
@@ -64,5 +64,30 @@ $(document).ready(() => {
     $('#user-deck-listing').on('click', 'img', (e) => {
         user_deck.splice(user_deck.indexOf(e.target.id), 1);
         $(e.target).parent().remove();
+    });
+
+
+    $('#csv-file').change(() => {
+        const fr = new FileReader();
+
+        fr.onload = function() {
+            socket.emit('csvFile', fr.result);
+        }
+
+        fr.readAsText($('#csv-file').prop('files')[0]);
+    });
+
+    socket.on('csvSubmitResults', (results) => {
+        $('#user-collection-listing').empty();
+
+        for (let i = 0; i < results.length; i++) {
+            let html = '<div class="card">';
+            //html    += '<p class="card-name">' + results[i].name + '</p>';
+            html    += '<img id="' + results[i].id + '" src="' + results[i].card_images[0].image_url + '">'
+            html    += '</div>'
+
+            $('#user-collection-listing').append(html);
+            user_collection.push(results[i].id);
+        }
     });
 });

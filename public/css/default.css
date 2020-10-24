@@ -74,6 +74,10 @@ img {
     height: auto;
 }
 
+div.card > img:hover {
+    filter: brightness(150%);
+}
+
 input {
     margin:  5px;
     padding: 2px;
@@ -85,8 +89,16 @@ input {
     color: rgb(224,224,224);
 }
 
+input[type="text"]:hover {
+    border-bottom: 1px dodgerblue solid;
+}
+
 input[type="file"]::file-selector-button {
     background-color: black;
     border: none;
     color:  cyan;
+}
+
+input[type="file"]::file-selector-button:hover {
+    color: dodgerblue;
 }

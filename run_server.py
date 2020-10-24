@@ -53,6 +53,16 @@ def collectionUpdated(sid, collection):
     sio.emit('collectionUpdateResults', results, room=sid)
 
 
+@sio.on('deckUpdated')
+def deckUpdated(sid, deck):
+    results = []
+
+    for card_id in deck:
+        results.append(card_db_by_id[int(card_id)])
+
+    sio.emit('deckUpdateResults', results, room=sid)
+
+
 # ---------------------------------------------------------------------------------------------------- FUNCTIONS
 def loadCardDB():
     global card_db

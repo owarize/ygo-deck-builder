@@ -19,7 +19,7 @@ static_files = {
     '/js/index.js':     'public/js/index.js'
 }
 
-sio = socketio.Server()
+sio = socketio.Server(cors_allowed_origins='*')
 app = socketio.WSGIApp(sio, static_files=static_files)
 
 port = 3000

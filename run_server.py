@@ -45,26 +45,6 @@ def dbSearch(sid, query):
         'n_results': n_results }, room=sid)
 
 
-@sio.on('collectionUpdated')
-def collectionUpdated(sid, collection):
-    results = []
-
-    for card_id in collection:
-        results.append(card_db_by_id[int(card_id)])
-
-    sio.emit('collectionUpdateResults', results, room=sid)
-
-
-@sio.on('deckUpdated')
-def deckUpdated(sid, deck):
-    results = []
-
-    for card_id in deck:
-        results.append(card_db_by_id[int(card_id)])
-
-    sio.emit('deckUpdateResults', results, room=sid)
-
-
 @sio.on('csvFile')
 def csvFile(sid, csv_str):
     csv_io  = io.StringIO(csv_str)

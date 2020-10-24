@@ -1,12 +1,18 @@
 $(document).ready(() => {
     const socket = io();
 
+    let card_details    = [];
     let user_collection = [];
     let user_deck       = [];
 
+    let allow_db_search = true; // TODO: This method will cause incorrect search results. Find a better solution.
+
 
     $('#db-search').on('input', () => {
-        socket.emit('dbSearch', $('#db-search').val());
+        if (allow_db_search) {
+            allow_db_search = false;
+            socket.emit('dbSearch', $('#db-search').val());
+        }
     });
 
     socket.on('dbSearchResults', (data) => {
@@ -19,46 +25,38 @@ $(document).ready(() => {
             html    += '</div>'
 
             $('#card-db-listing').append(html);
-            $('#db-search-n-results').text('25 of ' + data.n_results + ' results shown');
+
+            if (!(data.results[i].id in card_details)) {
+                card_details[data.results[i].id] = data.results[i]
+            }
         }
+
+        $('#db-search-n-results').text(data.results.length + ' of ' + data.n_results + ' results shown');
+        allow_db_search = true;
     });
 
 
     $('#card-db-listing').on('click', 'img', (e) => {
         user_collection.push(e.target.id);
-        socket.emit('collectionUpdated', user_collection);
-    });
 
-    socket.on('collectionUpdateResults', (results) => {
-        $('#user-collection-listing').empty();
+        let html = '<div class="card">';
+        //html    += '<p class="card-name">' + results[i].name + '</p>';
+        html    += '<img id="' + e.target.id + '" src="' + card_details[e.target.id].card_images[0].image_url + '">'
+        html    += '</div>'
 
-        for (let i = results.length-1; i >= 0; i--) {
-            let html = '<div class="card">';
-            //html    += '<p class="card-name">' + results[i].name + '</p>';
-            html    += '<img id="' + results[i].id + '" src="' + results[i].card_images[0].image_url + '">'
-            html    += '</div>'
-
-            $('#user-collection-listing').append(html);
-        }
+        $('#user-collection-listing').prepend(html);
     });
 
 
     $('#user-collection-listing').on('click', 'img', (e) => {
         user_deck.push(e.target.id);
-        socket.emit('deckUpdated', user_deck);
-    });
 
-    socket.on('deckUpdateResults', (results) => {
-        $('#user-deck-listing').empty();
+        let html = '<div class="card">';
+        //html    += '<p class="card-name">' + results[i].name + '</p>';
+        html    += '<img id="' + e.target.id + '" src="' + card_details[e.target.id].card_images[0].image_url + '">'
+        html    += '</div>'
 
-        for (let i = 0; i < results.length; i++) {
-            let html = '<div class="card">';
-            //html    += '<p class="card-name">' + results[i].name + '</p>';
-            html    += '<img id="' + results[i].id + '" src="' + results[i].card_images[0].image_url + '">'
-            html    += '</div>'
-
-            $('#user-deck-listing').append(html);
-        }
+        $('#user-deck-listing').prepend(html);
     });
 
     $('#user-deck-listing').on('click', 'img', (e) => {
@@ -88,6 +86,10 @@ $(document).ready(() => {
 
             $('#user-collection-listing').append(html);
             user_collection.push(results[i].id);
+
+            if (!(results[i].id in card_details)) {
+                card_details[results[i].id] = results[i]
+            }
         }
     });
 });
